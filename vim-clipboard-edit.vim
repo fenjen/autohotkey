@@ -32,8 +32,7 @@ fun Start()
 endfun
 
 fun GotoText()
-	normal gg/Current Clipboard/+2
-
+	execute "normal gg/Current Clipboard/+2\r"
 endfun
 
 fun CopyContent()
