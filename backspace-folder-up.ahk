@@ -1,3 +1,5 @@
+# Deprecated.
+# Hit Alt+Up instead.
 backspace_up_instead_of_back() {
     ControlGetFocus focused, A
     if (focused = "DirectUIHWND2")
