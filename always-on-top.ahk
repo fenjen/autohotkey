@@ -1,33 +1,20 @@
-; Press Ctrl+Shift+Space to toggle any currently active window staying on top.
-; Source: https://www.howtogeek.com/196958/the-3-best-ways-to-make-a-window-always-on-top-on-windows
+#Requires AutoHotkey v2.0
+; Ctrl+Shift+Space toggles "Always on top" for the active window.
 
-^+SPACE::
-	WinGetTitle, activeWindow, A
-	if IsWindowAlwaysOnTop(activeWindow) {
-		notificationMessage := "The window """ . activeWindow . """ is now always on top."
-		notificationIcon := 16 + 1 ; No notification sound (16) + Info icon (1)
-	}
-	else {
-		notificationMessage := "The window """ . activeWindow . """ is no longer always on top."
-		notificationIcon := 16 + 2 ; No notification sound (16) + Warning icon (2)
-	}
-	Winset, Alwaysontop, , A
-	TrayTip, Always-on-top, %notificationMessage%, , %notificationIcon% 
-	Sleep 3000 ; Let it display for 3 seconds.
-	HideTrayTip()
+^+Space:: {
+    activeTitle := WinGetTitle("A")
+    ; WS_EX_TOPMOST = 0x00000008
+    wasTopmost := (WinGetExStyle("A") & 0x00000008) != 0
 
-	IsWindowAlwaysOnTop(windowTitle) {
-		WinGet, windowStyle, ExStyle, %windowTitle%
-		isWindowAlwaysOnTop := if (windowStyle & 0x8) ? false : true ; 0x8 is WS_EX_TOPMOST.
-		return isWindowAlwaysOnTop
-	}
+    ; Set explicitly instead of "Toggle"
+    WinSetAlwaysOnTop(!wasTopmost, "A")
 
-	HideTrayTip() {
-		TrayTip  ; Attempt to hide it the normal way.
-		if SubStr(A_OSVersion,1,3) = "10." {
-			Menu Tray, NoIcon
-			Sleep 200  ; It may be necessary to adjust this sleep.
-			Menu Tray, Icon
-		}
-	}
-Return
+    if wasTopmost
+        msg := 'The window "' . activeTitle . '" is no longer always on top.'
+    else
+        msg := 'window "' . activeTitle . '" is now always on top.'
+
+    TrayTip("Always-on-top", msg)
+    Sleep 3000
+    TrayTip() ; hide
+}
