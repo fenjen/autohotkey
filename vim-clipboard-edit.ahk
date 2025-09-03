@@ -1,15 +1,10 @@
-#o::
-{
-	IfWinExist, Edit Clipboard
-	{
-		WinActivate, Edit Clipboard
+#o:: {
+	if WinExist("Edit Clipboard") {
+		WinActivate("Edit Clipboard")
 	}
 	else {
-		Run "C:\Program Files (x86)\Vim\vim82\gvim.exe" -n -U "C:\d\ahk\vim-clipboard-edit.vim"
-		WinWait, Edit Clipboard,, 1
-		if (ErrorLevel = 0)
-		{
-			WinActivate, Edit Clipboard
-		}
+		Run('"C:\Program Files\Vim\vim91\gvim.exe" -n -U "C:\d\scripts\vim-clipboard-edit.vim"')
+			if WinWait("Edit Clipboard", , 1)
+				WinActivate("Edit Clipboard")
 	}
 }
